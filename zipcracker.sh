@@ -32,8 +32,6 @@ fi
 file_hash="${file_zip}.hash"
 
 # Membuat hash dari file ZIP menggunakan zip2john
-echo "Membuat hash dari file ZIP '${file_zip}'..."
-sleep 3
 zip2john "${file_zip}" > "${file_hash}"
 
 # Menentukan wordlist default yang akan digunakan untuk cracking password
@@ -46,7 +44,5 @@ format="PKZIP"
 pot="Hasil_Cracking.txt"
 
 # Menggunakan John The Ripper untuk meng-crack kata sandi file ZIP
-echo "Meng-crack kata sandi file ZIP '${1}'..."
-sleep 3
 john --wordlist="${wordlist}" --format="${format}" --pot="${pot}" "${file_hash}"
 john --show "${file_hash}"
