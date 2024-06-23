@@ -35,11 +35,6 @@ file_hash="${file_zip}.hash"
 echo "Membuat hash dari file ZIP '${file_zip}'..."
 sleep 3
 zip2john "${file_zip}" > "${file_hash}"
-if [[ $? -ne 0 ]]; then
-    echo "Gagal membuat hash dari file ZIP '${file_zip}'."
-    exit 1
-fi
-echo "Hash telah berhasil dibuat dan disimpan di file '${file_hash}'."
 
 # Menentukan wordlist default yang akan digunakan untuk cracking password
 wordlist="rockyou.txt"
@@ -54,8 +49,4 @@ pot="Hasil_Cracking.txt"
 echo "Meng-crack kata sandi file ZIP '${1}'..."
 sleep 3
 john --wordlist="${wordlist}" --format="${format}" --pot="${pot}" "${file_hash}"
-if [[ $? -ne 0 ]]; then
-    echo "Gagal meng-crack kata sandi file ZIP '${1}'."
-    exit 1
-fi
 john --show "${file_hash}"
