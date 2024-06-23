@@ -3,9 +3,9 @@
 #
 # Skrip ini digunakan untuk melakukan cracking password pada file ZIP menggunakan zip2john dan John The Ripper.
 # 
-# Penggunaan: ./script.sh <file_zip>
+# Penggunaan: bash czfwj.sh.sh <file_zip>
 # 
-# Contoh: ./script.sh file.zip
+# Contoh: bash czfwj.sh file.zip
 #
 #######
 
