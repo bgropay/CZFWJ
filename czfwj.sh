@@ -1,4 +1,13 @@
 #!/bin/bash
+########
+#
+# Skrip ini digunakan untuk melakukan cracking password pada file ZIP menggunakan zip2john dan John The Ripper.
+# 
+# Penggunaan: ./script.sh <file_zip>
+# 
+# Contoh: ./script.sh file.zip
+#
+#######
 
 # Memeriksa jumlah argumen yang dimasukkan
 if [[ "${#}" -ne 1 ]]; then
@@ -41,6 +50,7 @@ format="zip"
 # Menyimpan hasil cracking dari John The Ripper
 output="Hasil_Cracking.txt"
 
+# Menggunakan John The Ripper untuk meng-crack kata sandi file ZIP
 echo "[ ** ] Mengcrack kata sandi file zip '${1}' menggunakan John The Ripper..."
 sleep 3
 john --wordlist="${wordlist}" --format="${format}" --pot="${output}" "${hash_file}"
@@ -49,6 +59,7 @@ if [[ $? -ne 0 ]]; then
     exit 1
 fi
 
+# Menampilkan hasil cracking dari John The Ripper
 echo "[ ** ] Menampilkan hasil proses Cracking dari John The Ripper..." 
 sleep 3
 john --show "${hash_file}"
