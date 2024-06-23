@@ -7,39 +7,48 @@ if [[ "${#}" -ne 1 ]]; then
 fi
 
 # Memeriksa apakah argumen yang dimasukkan adalah sebuah file
-if [[ ! -f "${1}" ]]; then
-    echo "Kesalahan: File '${1}' tidak ditemukan."
+file_zip="${1}"
+if [[ ! -f "${file_zip}" ]]; then
+    echo "[ NG ] File '${file_zip}' tidak ditemukan."
     exit 1
 fi
 
 # Memeriksa apakah file yang dimasukkan adalah file ZIP
-if [[ ! "${1##*.}" == "zip" ]]; then
-    echo "Kesalahan: '${1}' bukan file ZIP."
+if [[ ! "${file_zip##*.}" == "zip" ]]; then
+    echo "[ NG ] File '${file_zip}' bukan file ZIP."
     exit 1
 fi
 
 # Menyiapkan nama file untuk menyimpan hash dari file ZIP
-nfh="${1}.hash"
+hash_file="${file_zip}.hash"
 
 # Membuat hash dari file ZIP menggunakan zip2john
-echo "[ ** ] Membuat hash dari file ZIP '${1}'..."
+echo "[ ** ] Membuat hash dari file ZIP '${file_zip}' menggunakan zip2john ..."
 sleep 3
-zip2john "${1}" > "${nfh}"
-echo "[ OK ] Hash telah berhasil dibuat dan disimpan di file '${nfh}'."
+zip2john "${file_zip}" > "${hash_file}"
+if [[ $? -ne 0 ]]; then
+    echo "[ NG ] Gagal membuat hash dari file '${file_zip}' menggunakan zip2john ."
+    exit 1
+fi
+echo "[ OK ] Hash telah berhasil dibuat menggunakan zip2john dan disimpan di file '${hash_file}'."
 
 # Menentukan wordlist default yang akan digunakan untuk cracking password
-w="rockyou.txt"
+wordlist="rockyou.txt"
 
 # Menentukan format file ZIP untuk John The Ripper
-f="PKZIP"
+format="zip"
 
 # Menyimpan hasil cracking dari John The Ripper
-o="Hasil Cracking.txt"
+output="Hasil_Cracking.txt"
 
-echo "[ ** ] Menjalankan John The Ripper..."
+echo "[ ** ] Mengcrack kata sandi file zip '${1}' menggunakan John The Ripper..."
 sleep 3
-john --wordlist="${w}" --format="${f}" --pot="${o}" "${nfh}"
+john --wordlist="${wordlist}" --format="${format}" --pot="${output}" "${hash_file}"
+if [[ $? -ne 0 ]]; then
+    echo "[ NG ] Gagal meng-crack kata sandi file ZIP '${1}' menggunakan John The Ripper."
+    exit 1
+fi
 
-echo "[ ** ] Menampilkan hasil proses Cracking John The Ripper..." 
+echo "[ ** ] Menampilkan hasil proses Cracking dari John The Ripper..." 
 sleep 3
-john --show "{nfh}"
+john --show "${hash_file}"
