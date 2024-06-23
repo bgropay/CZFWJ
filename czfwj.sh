@@ -54,8 +54,8 @@ pot="Hasil_Cracking.txt"
 echo "Meng-crack kata sandi file ZIP '${1}'..."
 sleep 3
 john --wordlist="${wordlist}" --format="${format}" --pot="${pot}" "${file_hash}"
-john --show "${file_hash}"
 if [[ $? -ne 0 ]]; then
     echo "Gagal meng-crack kata sandi file ZIP '${1}'."
     exit 1
 fi
+john --show "${file_hash}"
