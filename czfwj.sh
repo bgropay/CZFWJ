@@ -29,17 +29,17 @@ if [[ ! "${file_zip##*.}" == "zip" ]]; then
 fi
 
 # Menyiapkan nama file untuk menyimpan hash dari file ZIP
-hash_file="${file_zip}.hash"
+file_hash="${file_zip}.hash"
 
 # Membuat hash dari file ZIP menggunakan zip2john
 echo "Membuat hash dari file ZIP '${file_zip}'..."
 sleep 3
-zip2john "${file_zip}" > "${hash_file}"
+zip2john "${file_zip}" > "${file_hash}"
 if [[ $? -ne 0 ]]; then
-    echo "Gagal membuat hash dari file '${file_zip}'."
+    echo "Gagal membuat hash dari file ZIP '${file_zip}'."
     exit 1
 fi
-echo "Hash telah berhasil dibuat dan disimpan di file '${hash_file}'."
+echo "Hash telah berhasil dibuat dan disimpan di file '${file_hash}'."
 
 # Menentukan wordlist default yang akan digunakan untuk cracking password
 wordlist="rockyou.txt"
@@ -48,13 +48,13 @@ wordlist="rockyou.txt"
 format="PKZIP"
 
 # Menyimpan hasil cracking dari John The Ripper
-output="Hasil_Cracking.txt"
+pot="Hasil_Cracking.txt"
 
 # Menggunakan John The Ripper untuk meng-crack kata sandi file ZIP
-echo "Mengcrack kata sandi file zip '${1}'..."
+echo "Meng-crack kata sandi file ZIP '${1}'..."
 sleep 3
-john --wordlist="${wordlist}" --format="${format}" --pot="${output}" "${hash_file}"
-john --show "${hash_file}"
+john --wordlist="${wordlist}" --format="${format}" --pot="${pot}" "${file_hash}"
+john --show "${file_hash}"
 if [[ $? -ne 0 ]]; then
     echo "Gagal meng-crack kata sandi file ZIP '${1}'."
     exit 1
