@@ -18,13 +18,13 @@ fi
 # Memeriksa apakah argumen yang dimasukkan adalah sebuah file
 file_zip="${1}"
 if [[ ! -f "${file_zip}" ]]; then
-    echo "[ NG ] File '${file_zip}' tidak ditemukan."
+    echo "File '${file_zip}' tidak ditemukan."
     exit 1
 fi
 
 # Memeriksa apakah file yang dimasukkan adalah file ZIP
 if [[ ! "${file_zip##*.}" == "zip" ]]; then
-    echo "[ NG ] File '${file_zip}' bukan file ZIP."
+    echo "File '${file_zip}' bukan file ZIP."
     exit 1
 fi
 
@@ -32,34 +32,30 @@ fi
 hash_file="${file_zip}.hash"
 
 # Membuat hash dari file ZIP menggunakan zip2john
-echo "[ ** ] Membuat hash dari file ZIP '${file_zip}' menggunakan zip2john ..."
+echo "Membuat hash dari file ZIP '${file_zip}'..."
 sleep 3
 zip2john "${file_zip}" > "${hash_file}"
 if [[ $? -ne 0 ]]; then
-    echo "[ NG ] Gagal membuat hash dari file '${file_zip}' menggunakan zip2john ."
+    echo "Gagal membuat hash dari file '${file_zip}'."
     exit 1
 fi
-echo "[ OK ] Hash telah berhasil dibuat menggunakan zip2john dan disimpan di file '${hash_file}'."
+echo "Hash telah berhasil dibuat dan disimpan di file '${hash_file}'."
 
 # Menentukan wordlist default yang akan digunakan untuk cracking password
 wordlist="rockyou.txt"
 
 # Menentukan format file ZIP untuk John The Ripper
-format="zip"
+format="PKZIP"
 
 # Menyimpan hasil cracking dari John The Ripper
 output="Hasil_Cracking.txt"
 
 # Menggunakan John The Ripper untuk meng-crack kata sandi file ZIP
-echo "[ ** ] Mengcrack kata sandi file zip '${1}' menggunakan John The Ripper..."
+echo "Mengcrack kata sandi file zip '${1}'..."
 sleep 3
 john --wordlist="${wordlist}" --format="${format}" --pot="${output}" "${hash_file}"
+john --show "${hash_file}"
 if [[ $? -ne 0 ]]; then
-    echo "[ NG ] Gagal meng-crack kata sandi file ZIP '${1}' menggunakan John The Ripper."
+    echo "Gagal meng-crack kata sandi file ZIP '${1}'."
     exit 1
 fi
-
-# Menampilkan hasil cracking dari John The Ripper
-echo "[ ** ] Menampilkan hasil proses Cracking dari John The Ripper..." 
-sleep 3
-john --show "${hash_file}"
